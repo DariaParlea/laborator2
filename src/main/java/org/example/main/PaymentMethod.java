@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.main;
 
 public class PaymentMethod {
     private int payment_id;

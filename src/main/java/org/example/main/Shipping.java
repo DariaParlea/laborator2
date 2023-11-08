@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.main;
 
 public class Shipping {
     private int shipping_id;

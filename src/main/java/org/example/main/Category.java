@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.main;
 
 public class Category {
     private int category_id;
