@@ -1,21 +1,23 @@
 package org.example.repositories;
 
-import org.example.model.CartItem;
+import org.example.main.CartItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CartItemRepository {
     private List<CartItem> cartItems = new ArrayList<>();
-    public List<CartItem> findByUser(int userId){
-        List<CartItem> userCartItems = new ArrayList<>();
-        for (CartItem cartItem : cartItems){
-            if (cartItem.getUser_id() == userId){
-                userCartItems.add(cartItem);
-            }
-        }
-        return userCartItems;
-    }
+//    public List<CartItem> findByUser(int userId){
+//        List<CartItem> userCartItems = new ArrayList<>();
+//        for (CartItem cartItem : cartItems){
+//            if (cartItem.getUser_id() == userId){
+//                userCartItems.add(cartItem);
+//            }
+//        }
+//        return userCartItems;
+//    }
+
+
 
     public List<CartItem> findAll(){
         return cartItems;
@@ -23,7 +25,7 @@ public class CartItemRepository {
 
     public void save(CartItem cartItem){
         for(CartItem existingCartItem : cartItems){
-            if(existingCartItem.getBook().equals(cartItem.getBook()) && existingCartItem.getUser_id() == cartItem.getUser_id()){
+            if(existingCartItem.getBook().equals(cartItem.getBook())){
                 existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItem.getQuantity());
                 return;
             }
@@ -34,7 +36,7 @@ public class CartItemRepository {
     public void update(CartItem cartItem){
         for(int i=0; i<cartItems.size();i++){
             CartItem existingCartItem = cartItems.get(i);
-            if(existingCartItem.getBook().equals(cartItem.getBook()) && existingCartItem.getUser_id() == cartItem.getUser_id()){
+            if(existingCartItem.getBook().equals(cartItem.getBook())){
                 cartItems.set(i,cartItem);
                 return;
             }
@@ -42,6 +44,6 @@ public class CartItemRepository {
     }
 
     public void delete(CartItem cartItem){
-        cartItems.removeIf(existingCartItem -> existingCartItem.getBook().equals(cartItem.getBook()) && existingCartItem.getUser_id() == cartItem.getUser_id());
+        cartItems.removeIf(existingCartItem -> existingCartItem.getBook().equals(cartItem.getBook()) );
     }
 }

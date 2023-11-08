@@ -1,48 +1,92 @@
 package org.example.repositories;
 
-import org.example.model.Books;
+import org.example.main.Books;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 public class BooksRepository {
     private List<Books> books = new ArrayList<>();
-    private int nextId = 1;
 
-   
+
     public Books findById(int bookId) {
-        Optional<Books> optionalBooks = books.stream().filter(Books -> Books.getBook_id() == bookId).findFirst();
-        return optionalBooks.orElse(null);
+        for (Books book : books) {
+            if (book.getBook_id() == bookId) {
+                return book;
+            }
+        }
+        System.out.println("Could not find book with Id:" + bookId);
+        return null;
     }
 
-    
+
     public List<Books> findAll() {
+        if(books.isEmpty()){
+            System.out.println("No book was found");
+            return null;
+        }
+
         return books;
     }
 
-    
-    public void save(Books book) {
-        book.setBook_id(nextId++);
+
+    public boolean save(Books book) {
+        boolean saved = false;
+        for (Books book1 : books) {
+            if (book1.getBook_id() == book1.getBook_id()) {
+                System.out.println("Book already exists");
+                return saved;
+            }
+
+        }
         books.add(book);
+        for (Books book1 : books) {
+            if (book1.getBook_id() == book1.getBook_id())
+                saved = true;
+        }
+
+        return saved;
     }
 
-    
-    public void update(Books book) {
-        int index = -1;
-        for (int i = 0; i < books.size(); i++) {
-            if (books.get(i).getBook_id() == book.getBook_id()) {
-                index = i;
+
+    public boolean update(Books book) {
+        boolean updated = false;
+        for (Books book1 : books) {
+            if (book1.getBook_id() == book.getBook_id()) {
+                book1.setTitle(book.getTitle());
+                book1.setAuthor(book.getAuthor());
+                book1.setCategory(book.getCategory());
+                book1.setPrice(book.getPrice());
+                book1.setPublishing_year(book.getPublishing_year());
+                updated = true;
                 break;
             }
         }
-        if (index != -1) {
-            books.set(index, book);
-        }
+        if (updated == false)
+            System.out.println("Book was not updated");
+        return updated;
     }
 
-    
-    public void delete(int booksId) {
-        books.removeIf(book -> book.getBook_id() == booksId);
+
+    public boolean delete(int booksId) {
+        boolean deleted = false;
+        Books bookMethodToRemove = null;
+        for (Books book : books) {
+            if (book.getBook_id() == booksId) {
+                bookMethodToRemove = book;
+                break;
+            }
+        }
+
+        if (bookMethodToRemove == null) {
+            System.out.println("Bppk does not exist");
+            deleted = false;
+        }
+        if (bookMethodToRemove != null) {
+            books.remove(bookMethodToRemove);
+            deleted = true;
+        }
+        return deleted;
     }
 }

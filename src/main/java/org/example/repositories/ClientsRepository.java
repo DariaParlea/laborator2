@@ -1,41 +1,89 @@
 package org.example.repositories;
 
-import org.example.model.Clients;
+import org.example.main.Clients;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 public class ClientsRepository {
     private List<Clients> clients = new ArrayList<>();
-    private int nextID = 1;
 
-    public Clients findById(int clientId){
-        Optional<Clients> optionalClient = clients.stream().filter(client ->client.getClient_id() == clientId).findFirst();
-        return optionalClient.orElse(null);
+    public Clients findById(int targetClientId) {
+        for (Clients client : clients) {
+            if (client.getClient_id() == targetClientId) {
+                return client;
+            }
+        }
+        System.out.println("Could not find Client with Id: " + targetClientId);
+        return null;
     }
 
-    public Clients findByEmail(String email){
-        Optional<Clients> optionalClient = clients.stream().filter(client -> client.getEmail().equals(email)).findFirst();
-        return optionalClient.orElse(null);
-    }
-
-    public List<Clients> findAll(){
+    public List<Clients> findAll() {
+        if (clients.isEmpty()) {
+            System.out.println("There are no Clients");
+            return null;
+        }
         return clients;
     }
 
-    public void save(Clients client){
-        int index = -1;
-        for(int i=0; i<clients.size(); i++)
-            if(clients.get(i).getClient_id() == client.getClient_id()){
-                index = i;
-                break;
+
+    public boolean save(Clients client) {
+        boolean saved = false;
+        for (Clients item : clients) {
+            if (client.getClient_id() == item.getClient_id()) {
+                System.out.println("Client already exists");
+                return saved;
             }
-        if(index != -1)
-            clients.set(index, client);
+
+        }
+        clients.add(client);
+        for (Clients item : clients) {
+            if (client.getClient_id() == item.getClient_id())
+                saved = true;
+        }
+
+        return saved;
     }
 
-    public void delete(int clientId){
-        clients.removeIf(client -> client.getClient_id() == clientId);
+    public boolean update(Clients updatedclient) {
+        boolean updated = false;
+        for (Clients client : clients) {
+            if (client.getClient_id() == updatedclient.getClient_id()) {
+                client.setFirstName(updatedclient.getFirstName());
+                client.setLastName(updatedclient.getLastName());
+                client.setBirth_date(updatedclient.getBirth_date());
+                client.setAddresses(updatedclient.getAddresses());
+                client.setEmail(updatedclient.getEmail());
+                updated = true;
+                break;
+            }
+        }
+        if (updated == false)
+            System.out.println("Client was not updated");
+
+        return updated;
+    }
+
+    public boolean delete(int targetClientId) {
+        boolean deleted = false;
+        Clients clientToRemove = null;
+        for (Clients client : clients) {
+            if (client.getClient_id() == targetClientId) {
+                clientToRemove = client;
+                break;
+            }
+        }
+        if (clientToRemove == null) {
+            System.out.println("Client does not exist");
+            deleted = false;
+        }
+        if (clientToRemove != null) {
+            clients.remove(clientToRemove);
+            deleted = true;
+        }
+        return deleted;
+
+
     }
 }
