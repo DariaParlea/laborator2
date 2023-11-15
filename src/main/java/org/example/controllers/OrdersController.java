@@ -33,4 +33,22 @@ public class OrdersController {
     public void deleteOrder(int orderId) {
         ordersRepository.delete(orderId);
     }
+
+    public void addItemToOrder(int orderId, CartItem cartItem){
+        Orders order = ordersRepository.findById(orderId);
+
+        if(order != null){
+            order.addCartItem(cartItem);
+            ordersRepository.update(order);
+        }
+    }
+
+    public void removeItemFromOrder(int orderId,CartItem cartItem){
+        Orders order=ordersRepository.findById(orderId);
+        if(order!=null){
+            order.removeCartItem(cartItem);
+            ordersRepository.update(order);
+        }
+    }
 }
+

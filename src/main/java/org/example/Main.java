@@ -1,19 +1,35 @@
 package org.example;
+import org.example.repositories.*;
+import org.example.controllers.*;
 
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 public class Main {
     public static void main(String[] args) {
-        // Press Opt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        AuthorRepository authorRepository = new AuthorRepository();
+        BooksRepository booksRepository = new BooksRepository();
+        CartItemRepository cartItemRepository = new CartItemRepository();
+        CategoryRepository categoryRepository = new CategoryRepository();
+        ClientsRepository clientsRepository = new ClientsRepository();
+        OrdersRepository ordersRepository = new OrdersRepository();
+        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+        PublisherRepository publisherRepository = new PublisherRepository();
+        ReviewRepository reviewRepository = new ReviewRepository();
+        ShippingRepository shippingRepository = new ShippingRepository();
 
-        // Press Ctrl+R or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        AuthorController authorController = new AuthorController(authorRepository);
+        BookController bookController = new BookController(booksRepository);
+        CartController cartController = new CartController(cartItemRepository);
+        CategoryController categoryController = new CategoryController(categoryRepository);
+        ClientController clientController = new ClientController(clientsRepository);
+        OrdersController ordersController = new OrdersController(ordersRepository);
+        PaymentMethodController paymentMethodController = new PaymentMethodController(paymentMethodRepository);
+        PublisherController publisherController = new PublisherController(publisherRepository);
+        ReviewController reviewController = new ReviewController(reviewRepository);
+        ShippingController shippingController = new ShippingController(shippingRepository);
 
-            // Press Ctrl+D to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Cmd+F8.
-            System.out.println("i = " + i);
-        }
+        ClientUI clientUI = new ClientUI(bookController,ordersController,clientController,cartController,reviewController,paymentMethodController, categoryController,authorController, shippingController);
+        //clientUI.start();
+
+        ManagerUI managerUI = new ManagerUI(authorController,bookController,categoryController,ordersController,publisherController,shippingController,clientController,reviewController,paymentMethodController);
+        managerUI.start();
     }
 }

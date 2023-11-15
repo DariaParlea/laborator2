@@ -9,13 +9,11 @@ import java.util.List;
 
 public class BookController {
     private BooksRepository bookRepository;
-    private CartItemRepository cartItemRepository;
     private Scanner scanner = new Scanner(System.in);
     private Clients currentClient;
 
-    public BookController(BooksRepository bookRepository, CartItemRepository cartItemRepository) {
+    public BookController(BooksRepository bookRepository) {
         this.bookRepository = bookRepository;
-        this.cartItemRepository = cartItemRepository;
     }
 
     public void createBook(int book_id, String title, int publishing_year, Author author, int price, Category category) {
