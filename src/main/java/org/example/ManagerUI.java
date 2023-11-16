@@ -8,6 +8,7 @@ import org.example.repositories.*;
 
 import org.example.main.Patterns.Strategy.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -48,6 +49,7 @@ public class ManagerUI {
             System.out.println("7. Manage payment methods");
             System.out.println("8. Manage reviews");
             System.out.println("9. Manage clients");
+            System.out.println("10.Exit");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
@@ -124,7 +126,7 @@ public class ManagerUI {
             case 3:
                 System.out.println("This are the authors: ");
                 List<Author> authors = authorController.viewAllAuthors();
-                if (authors.isEmpty())
+                if (authors == null || authors.isEmpty())
                     System.out.println("No authors available.");
                 else {
                     for (Author author : authors) {
@@ -218,7 +220,7 @@ public class ManagerUI {
             case 3:
                 System.out.println("This are all the books: ");
                 List<Books> books = bookController.viewAllBooks();
-                if (books.isEmpty()) {
+                if (books == null || books.isEmpty()) {
                     System.out.println("No books available.");
                 } else {
                     for (Books book : books) {
@@ -304,7 +306,7 @@ public class ManagerUI {
             case 3:
                 System.out.println("This are the categories: ");
                 List<Category> categories = categoryController.viewAllCategory();
-                if (categories.isEmpty())
+                if (categories == null || categories.isEmpty())
                     System.out.println("No categories available.");
                 else {
                     for (Category category : categories) {
@@ -357,7 +359,7 @@ public class ManagerUI {
             case 2:
                 System.out.println("These are all the orders: ");
                 List<Orders> orders = ordersController.viewAllOrders();
-                if (orders.isEmpty())
+                if (orders == null || orders.isEmpty())
                     System.out.println("There are no orders.");
                 else {
                     for (Orders order : orders) {
@@ -416,7 +418,7 @@ public class ManagerUI {
             case 1:
                 System.out.println("These are all the clients: ");
                 List<Clients> clients = clientController.viewAllClients();
-                if (clients.isEmpty())
+                if (clients == null || clients.isEmpty())
                     System.out.println("No clients available.");
                 else {
                     for (Clients client : clients) {
@@ -491,7 +493,7 @@ public class ManagerUI {
             case 2:
                 System.out.println("These are all the reviews: ");
                 List<Review> reviews = reviewController.viewAllReviews();
-                if (reviews.isEmpty())
+                if (reviews == null || reviews.isEmpty())
                     System.out.println("No reviews available.");
                 else {
                     for (Review review : reviews) {
@@ -533,7 +535,7 @@ public class ManagerUI {
             case 1:
                 System.out.println("These are all the payment methods: ");
                 List<PaymentMethod> paymentMethods = paymentMethodController.viewAllPaymentMethods();
-                if (paymentMethods.isEmpty())
+                if (paymentMethods == null || paymentMethods.isEmpty())
                     System.out.println("No payment methods available.");
                 else {
                     for (PaymentMethod paymentMethod : paymentMethods) {
@@ -617,7 +619,8 @@ public class ManagerUI {
                 System.out.println("Give publisher fiscal code: ");
                 int fiscalCode = scanner.nextInt();
                 scanner.nextLine();
-                publisherController.createPublisher(publisherId, name, address, fiscalCode);
+                List<Books> books = new ArrayList<>();
+                publisherController.createPublisher(publisherId, name, address, fiscalCode,books);
                 System.out.println("Publisher added successfully!");
                 break;
             case 2:
@@ -638,7 +641,7 @@ public class ManagerUI {
             case 3:
                 System.out.println("These are all the publishers: ");
                 List<Publisher> publishers = publisherController.viewAllPublishers();
-                if (publishers.isEmpty())
+                if (publishers == null || publishers.isEmpty())
                     System.out.println("No publishers available.");
                 else {
                     for (Publisher publisher : publishers) {
@@ -660,7 +663,8 @@ public class ManagerUI {
                 System.out.println("Give new fiscal code: ");
                 int newFiscalCode = scanner.nextInt();
                 scanner.nextLine();
-                publisherController.updatePublisher(publisherIdToUpdate, newName, newAddress, newFiscalCode);
+                List<Books> books1 = new ArrayList<>();
+                publisherController.updatePublisher(publisherIdToUpdate, newName, newAddress, newFiscalCode, books1);
                 System.out.println("Publisher with ID " + publisherIdToUpdate + " has been updated.");
                 break;
             case 5:
@@ -693,7 +697,7 @@ public class ManagerUI {
             case 1:
                 System.out.println("These are all the shippings: ");
                 List<Shipping> shippingList = shippingController.viewAllShippings();
-                if (shippingList.isEmpty())
+                if (shippingList == null || shippingList.isEmpty())
                     System.out.println("No shipping available.");
                 else {
                     for (Shipping shipping : shippingList) {

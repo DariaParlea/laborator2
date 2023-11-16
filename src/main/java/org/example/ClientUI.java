@@ -1,16 +1,17 @@
 package org.example;
 import org.example.controllers.*;
 import org.example.main.*;
+import org.example.main.Patterns.Decorator.DiscountedBooksDecorator;
 import org.example.main.Patterns.Strategy.BankTransferPaymentStrategy;
 import org.example.main.Patterns.Strategy.CardPaymentStrategy;
 import org.example.main.Patterns.Strategy.CashPaymentStrategy;
 import org.example.main.Patterns.Strategy.PaymentStrategy;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.time.format.TextStyle;
+import java.util.*;
 
 public class ClientUI {
     private final Scanner scanner = new Scanner(System.in);
@@ -21,7 +22,6 @@ public class ClientUI {
     private final BookController bookController;
     private final OrdersController ordersController;
     private final ClientController clientController;
-    private final CartController cartItemController;
     private final ReviewController reviewController;
     private final PaymentMethodController paymentMethodController;
     private final CategoryController categoryController;
@@ -30,11 +30,10 @@ public class ClientUI {
     private final ShippingController shippingController;
 
 
-    public ClientUI(BookController bookController, OrdersController ordersController, ClientController clientController, CartController cartItemController, ReviewController reviewController, PaymentMethodController paymentMethodController, CategoryController categoryController, AuthorController authorController, ShippingController shippingController) {
+    public ClientUI(BookController bookController, OrdersController ordersController, ClientController clientController, ReviewController reviewController, PaymentMethodController paymentMethodController, CategoryController categoryController, AuthorController authorController, ShippingController shippingController) {
         this.bookController = bookController;
         this.ordersController = ordersController;
         this.clientController = clientController;
-        this.cartItemController = cartItemController;
         this.reviewController = reviewController;
         this.paymentMethodController = paymentMethodController;
         this.categoryController = categoryController;
@@ -42,10 +41,10 @@ public class ClientUI {
         this.shippingController = shippingController;
     }
 
-    //Clients client1 = new Clients(1, "Ana", "Aana","11-12-2002","Ploiesti","a");
+
     public void start(){
         while(true){
-            System.out.println("Welcome!");
+            System.out.println("Welcome! Please log in or register first.");
             System.out.println("1.Register");
             System.out.println("2.Login");
             System.out.println("3.Update data");
@@ -146,7 +145,7 @@ public class ClientUI {
         System.out.println("List of available categories:");
         List<Category> availablecategories = categoryController.viewAllCategory();
         int index = 1;
-        if(availablecategories.isEmpty()){
+        if(availablecategories == null || availablecategories.isEmpty()){
             System.out.println("No categories available.");
         } else {
             for(Category category :availablecategories){
@@ -160,7 +159,7 @@ public class ClientUI {
         System.out.println("List of available Authors:");
         List<Author> availableauthors = authorController.viewAllAuthors();
         int index = 1;
-        if(availableauthors.isEmpty()){
+        if(availableauthors == null || availableauthors.isEmpty()){
             System.out.println("No authors available");
         } else{
             for(Author author:availableauthors){
@@ -172,16 +171,16 @@ public class ClientUI {
     public void viewBooks(){
         System.out.println("List of available books:");
         List<Books> availableBooks = bookController.viewAllBooks();
-        if(availableBooks.isEmpty()){
+        if(availableBooks == null ||availableBooks.isEmpty()){
             System.out.println("No books available.");
         } else {
             for(Books book : availableBooks){
                 System.out.println("Book ID: " + book.getBook_id());
                 System.out.println("Title: " + book.getTitle());
                 System.out.println("Publishing year: " + book.getPublishing_year());
-                System.out.println("Author: " + book.getAuthor());
+                System.out.println("Author: " + book.getAuthor().getFirstName() + " " + book.getAuthor().getLastName());
                 System.out.println("Price: " + book.getPrice());
-                System.out.println("Category: " + book.getCategory());
+                System.out.println("Category: " + book.getCategory().getType());
             }
         }
     }
@@ -192,13 +191,19 @@ public class ClientUI {
             int bookid = scanner.nextInt();
             scanner.nextLine();
             Books selectedbook = bookController.findBookById(bookid);
-
+            String dayOfWeek = getCurrentDayOfWeek();
+            if(dayOfWeek.equals("Friday")){
+                DiscountedBooksDecorator discount = new DiscountedBooksDecorator(selectedbook, 0.1);
+                selectedbook.setPrice(discount.getPrice());
+            }
+            int actualprice = selectedbook.getPrice();
             if (selectedbook != null) {
                 System.out.println("Enter the quantity: ");
                 int quantity = scanner.nextInt();
                 CartItem cartItem = new CartItem(selectedbook, quantity);
                 ordersController.addItemToOrder(orderid, cartItem);
                 System.out.println("Book added to cart.");
+                selectedbook.setPrice(actualprice);
             } else {
                 System.out.println("Book not found.");
             }
@@ -207,28 +212,35 @@ public class ClientUI {
         }
     }
 
-    public void deleteBookFromCart(){
-        if( currentClient!= null){
+
+    public void deleteBookFromCart() {
+        if (currentClient != null) {
             System.out.println("Enter the book id you want to delete: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-            Books booktodelete = bookController.findBookById(id);
+            Books bookToDelete = bookController.findBookById(id);
             Orders order = ordersController.findOrderById(orderid);
-            if(booktodelete != null){
-                List<CartItem> cartItems= order.getCartItems();
-                for(CartItem cartItem :cartItems){
-                    if(booktodelete  == cartItem.getBook()){
-                        if(cartItem.getQuantity() == 1){
-                            ordersController.removeItemFromOrder(orderid,cartItem);
-                        }else {
+
+            if (bookToDelete != null) {
+                List<CartItem> cartItems = order.getCartItems();
+                Iterator<CartItem> iterator = cartItems.iterator();
+
+                while (iterator.hasNext()) {
+                    CartItem cartItem = iterator.next();
+                    if (bookToDelete == cartItem.getBook()) {
+                        if (cartItem.getQuantity() == 1) {
+                            iterator.remove(); // Use iterator's remove method
+                            ordersController.removeItemFromOrder(orderid, cartItem);
+                        } else {
                             int quantity = cartItem.getQuantity();
-                            cartItem.setQuantity(quantity-1);
+                            cartItem.setQuantity(quantity - 1);
                         }
                     }
                 }
             }
         }
     }
+
 
     public void finalizeOrder(){
         if(currentClient != null){
@@ -332,6 +344,18 @@ public class ClientUI {
 
         return currentDate.format(formatter);
     }
+
+    public static String getCurrentDayOfWeek() {
+        LocalDate currentDate = LocalDate.now();
+
+        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+
+        Locale locale = Locale.getDefault();
+        String dayOfWeekString = dayOfWeek.getDisplayName(TextStyle.FULL, locale);
+
+        return dayOfWeekString;
+    }
+
 
     public void login() {
         System.out.print("Enter your client ID: ");

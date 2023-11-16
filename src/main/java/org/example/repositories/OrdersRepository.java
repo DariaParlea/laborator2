@@ -10,6 +10,10 @@ public class OrdersRepository {
 
     private List<Orders> orders = new ArrayList<>();
 
+    public OrdersRepository(List<Orders> orders) {
+        this.orders = orders;
+    }
+
     public Orders findById(int targetOrderId) {
         for (Orders order : orders) {
             if (order.getOrder_id() == targetOrderId) {
@@ -55,6 +59,7 @@ public class OrdersRepository {
                 order.setClient_id(updatedOrder.getClient_id());
                 order.setStatus(updatedOrder.getStatus());
                 order.calculateTotalPrice();
+                order.setCartItems(updatedOrder.getCartItems());
                 updated = true;
                 break;
             }

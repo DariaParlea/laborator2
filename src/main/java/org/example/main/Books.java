@@ -1,7 +1,9 @@
 package org.example.main;
 
 
-public class Books {
+import org.example.main.Patterns.Decorator.BooksDecorator;
+
+public class Books implements BooksDecorator {
     private int book_id;
     private String title;
     private int publishing_year;
@@ -50,6 +52,7 @@ public class Books {
         this.author = author;
     }
 
+    @Override
     public int getPrice() {
         return price;
     }
@@ -65,4 +68,6 @@ public class Books {
     public void setCategory(Category category) {
         this.category = category;
     }
+
+
 }

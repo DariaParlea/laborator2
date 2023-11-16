@@ -7,6 +7,10 @@ import java.util.List;
 public class CategoryRepository {
     private List<Category> categories = new ArrayList<>();
 
+    public CategoryRepository(List<Category> categories) {
+        this.categories = categories;
+    }
+
     public Category findById(int targetCategoryId) {
         for (Category category : categories) {
             if (category.getCategory_id() == targetCategoryId) {

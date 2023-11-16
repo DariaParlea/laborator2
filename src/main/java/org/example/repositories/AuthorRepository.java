@@ -9,6 +9,10 @@ import java.util.List;
 public class AuthorRepository {
     private List<Author> authors = new ArrayList<>();
 
+    public AuthorRepository(List<Author> authors) {
+        this.authors = authors;
+    }
+
     public Author findById(int authorId){
         for (Author author : authors) {
             if (author.getAuthor_id() == authorId) {

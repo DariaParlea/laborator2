@@ -80,6 +80,10 @@ public class Orders implements CartItemObserver {
         return cartItems;
     }
 
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
     @Override
     public void update(CartItem cartItem) {
         calculateTotalPrice();

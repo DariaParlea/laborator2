@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import org.example.main.Books;
 import org.example.main.Publisher;
 import org.example.repositories.PublisherRepository;
 
@@ -13,8 +14,8 @@ public class PublisherController {
         this.publisherRepository = publisherRepository;
     }
 
-    public void createPublisher(int publisherId, String name, String address, int fiscalCode) {
-        Publisher publisher = new Publisher(publisherId, name, address, fiscalCode);
+    public void createPublisher(int publisherId, String name, String address, int fiscalCode,List<Books> books) {
+        Publisher publisher = new Publisher(publisherId, name, address, fiscalCode,books);
         publisherRepository.save(publisher);
     }
 
@@ -26,8 +27,8 @@ public class PublisherController {
         return publisherRepository.findAll();
     }
 
-    public void updatePublisher(int publisherId, String name, String address, int fiscalCode) {
-        Publisher updatedPublisher = new Publisher(publisherId, name, address, fiscalCode);
+    public void updatePublisher(int publisherId, String name, String address, int fiscalCode, List<Books> books) {
+        Publisher updatedPublisher = new Publisher(publisherId, name, address, fiscalCode, books);
         publisherRepository.update(updatedPublisher);
     }
 

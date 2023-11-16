@@ -9,6 +9,10 @@ public class PaymentMethodRepository {
 
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
+    public PaymentMethodRepository(List<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
+
     public PaymentMethod findById(int targetPaymentId) {
         for (PaymentMethod paymentMethod : paymentMethods) {
             if (paymentMethod.getPayment_id() == targetPaymentId) {

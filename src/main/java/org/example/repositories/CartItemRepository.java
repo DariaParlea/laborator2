@@ -7,17 +7,10 @@ import java.util.List;
 
 public class CartItemRepository {
     private List<CartItem> cartItems = new ArrayList<>();
-//    public List<CartItem> findByUser(int userId){
-//        List<CartItem> userCartItems = new ArrayList<>();
-//        for (CartItem cartItem : cartItems){
-//            if (cartItem.getUser_id() == userId){
-//                userCartItems.add(cartItem);
-//            }
-//        }
-//        return userCartItems;
-//    }
 
-
+    public CartItemRepository(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
 
     public List<CartItem> findAll(){
         return cartItems;

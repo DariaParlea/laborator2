@@ -9,6 +9,10 @@ public class ReviewRepository {
 
     private List<Review> reviews = new ArrayList<>();
 
+    public ReviewRepository(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     public Review findById(int targetReviewId) {
         for (Review review : reviews) {
             if (review.getReview_id() == targetReviewId) {

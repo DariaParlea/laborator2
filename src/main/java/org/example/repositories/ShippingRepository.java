@@ -10,6 +10,10 @@ public class ShippingRepository {
 
     private List<Shipping> shippings = new ArrayList<>();
 
+    public ShippingRepository(List<Shipping> shippings) {
+        this.shippings = shippings;
+    }
+
     public Shipping findById(int targetShippingId) {
         for (Shipping shipping : shippings) {
             if (shipping.getShipping_id() == targetShippingId) {

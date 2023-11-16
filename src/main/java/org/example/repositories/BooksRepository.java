@@ -9,6 +9,9 @@ import java.util.List;
 public class BooksRepository {
     private List<Books> books = new ArrayList<>();
 
+    public BooksRepository(List<Books> books) {
+        this.books = books;
+    }
 
     public Books findById(int bookId) {
         for (Books book : books) {

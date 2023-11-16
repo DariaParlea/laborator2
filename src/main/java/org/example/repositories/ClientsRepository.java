@@ -9,6 +9,10 @@ import java.util.List;
 public class ClientsRepository {
     private List<Clients> clients = new ArrayList<>();
 
+    public ClientsRepository(List<Clients> clients) {
+        this.clients = clients;
+    }
+
     public Clients findById(int targetClientId) {
         for (Clients client : clients) {
             if (client.getClient_id() == targetClientId) {
@@ -53,7 +57,7 @@ public class ClientsRepository {
                 client.setFirstName(updatedclient.getFirstName());
                 client.setLastName(updatedclient.getLastName());
                 client.setBirth_date(updatedclient.getBirth_date());
-                client.setAddresses(updatedclient.getAddresses());
+                client.setAddress(updatedclient.getAddress());
                 client.setEmail(updatedclient.getEmail());
                 updated = true;
                 break;

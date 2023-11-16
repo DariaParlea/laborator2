@@ -9,6 +9,10 @@ public class PublisherRepository {
 
     private List<Publisher> publishers = new ArrayList<>();
 
+    public PublisherRepository(List<Publisher> publishers) {
+        this.publishers = publishers;
+    }
+
     public Publisher findById(int targetPublisherId) {
         for (Publisher publisher : publishers) {
             if (publisher.getPublisher_id() == targetPublisherId) {
@@ -53,6 +57,7 @@ public class PublisherRepository {
                 publisher.setName(updatedPublisher.getName());
                 publisher.setAddress(updatedPublisher.getAddress());
                 publisher.setFiscal_code(updatedPublisher.getFiscal_code());
+                publisher.setBooks(updatedPublisher.getBooks());
                 updated = true;
                 break;
             }
