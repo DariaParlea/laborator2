@@ -3,19 +3,19 @@ import org.example.main.Clients;
 import org.example.repositories.ClientsRepository;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class ClientController {
     private ClientsRepository clientsRepository;
-    private Scanner scanner = new Scanner(System.in);
+    private PersonController personController;
 
-    public ClientController(ClientsRepository clientsRepository) {
+
+    public ClientController(ClientsRepository clientsRepository, PersonController personController) {
         this.clientsRepository = clientsRepository;
+        this.personController = personController;
     }
 
     public void createClient(int clientId, String fname, String lname,String bdate, String adress, String email) {
-        Clients client = new Clients(clientId, fname, lname, bdate, adress, email);
-        clientsRepository.save(client);
+        personController.createPerson(clientId,fname,lname,bdate,adress,email);
     }
 
     public Clients findClientById(int clientId) {

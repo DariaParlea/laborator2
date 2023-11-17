@@ -1,14 +1,18 @@
 package org.example.repositories;
 
 
+import org.example.main.CartItem;
 import org.example.main.Orders;
+import org.example.main.Patterns.Observer.CartItemObservable;
+import org.example.main.Patterns.Observer.OrderObserver;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrdersRepository {
+public class OrdersRepository implements OrderObserver {
 
     private List<Orders> orders = new ArrayList<>();
+    private List<CartItemObservable> observables;
 
     public OrdersRepository(List<Orders> orders) {
         this.orders = orders;
@@ -88,9 +92,19 @@ public class OrdersRepository {
             deleted = true;
         }
         return deleted;
-
-
     }
 
 
+
+    @Override
+    public void update_event(String event, CartItem cartItem) {
+        for(Orders order : orders){
+            List<CartItem> cartItems = order.getCartItems();
+            for(CartItem cartItem1 : cartItems){
+                if(cartItem.equals(cartItem1)){
+                    System.out.println(event);
+                }
+            }
+        }
+    }
 }

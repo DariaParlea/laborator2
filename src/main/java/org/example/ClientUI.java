@@ -1,7 +1,6 @@
 package org.example;
 import org.example.controllers.*;
 import org.example.main.*;
-import org.example.main.Patterns.Decorator.DiscountedBooksDecorator;
 import org.example.main.Patterns.Strategy.BankTransferPaymentStrategy;
 import org.example.main.Patterns.Strategy.CardPaymentStrategy;
 import org.example.main.Patterns.Strategy.CashPaymentStrategy;
@@ -26,7 +25,6 @@ public class ClientUI {
     private final PaymentMethodController paymentMethodController;
     private final CategoryController categoryController;
     private final AuthorController authorController;
-
     private final ShippingController shippingController;
 
 
@@ -191,19 +189,15 @@ public class ClientUI {
             int bookid = scanner.nextInt();
             scanner.nextLine();
             Books selectedbook = bookController.findBookById(bookid);
-            String dayOfWeek = getCurrentDayOfWeek();
-            if(dayOfWeek.equals("Friday")){
-                DiscountedBooksDecorator discount = new DiscountedBooksDecorator(selectedbook, 0.1);
-                selectedbook.setPrice(discount.getPrice());
-            }
-            int actualprice = selectedbook.getPrice();
+
             if (selectedbook != null) {
+                selectedbook.getDiscountedPrice();
+                System.out.println("Price: " + selectedbook.getPrice());
                 System.out.println("Enter the quantity: ");
                 int quantity = scanner.nextInt();
                 CartItem cartItem = new CartItem(selectedbook, quantity);
                 ordersController.addItemToOrder(orderid, cartItem);
                 System.out.println("Book added to cart.");
-                selectedbook.setPrice(actualprice);
             } else {
                 System.out.println("Book not found.");
             }
@@ -253,6 +247,7 @@ public class ClientUI {
             PaymentStrategy type;
             if (pay_method.equalsIgnoreCase("cash")) {
                 type = new CashPaymentStrategy();
+                type.processPayment();
             } else {
                 if (pay_method.equalsIgnoreCase("card")) {
                     type = new CardPaymentStrategy();
@@ -329,7 +324,7 @@ public class ClientUI {
         System.out.println("Enter your address: ");
         String address = scanner.nextLine();
 
-        clientController.createClient(user_id,fname,lname,birthdate,address,email);
+        //clientController.createClient(user_id,fname,lname,birthdate,address,email);
 
         System.out.println("Registration successful. You can now log in.");
         //System.out.println("Number of clients in the repository: " + clientsRepository.findAll().size());

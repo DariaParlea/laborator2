@@ -1,18 +1,16 @@
 package org.example.main;
 
-import org.example.main.Patterns.Observer.CartItemObserver;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Orders implements CartItemObserver {
+public class Orders  {
     private int order_id;
     private String date;
     private int total_price;
     private int client_id;
     private String status;
     private List<CartItem> cartItems;
-    private List<CartItemObserver> observers = new ArrayList<>();
+
 
     public Orders(int order_id, String date, int total_price, int client_id, String status, List<CartItem> cartItems) {
         this.order_id = order_id;
@@ -21,10 +19,6 @@ public class Orders implements CartItemObserver {
         this.client_id = client_id;
         this.status = status;
         this.cartItems = cartItems;
-
-        for (CartItem cartItem : cartItems) {
-            cartItem.addObserver(this);
-        }
     }
 
     public int getOrder_id() {
@@ -82,11 +76,6 @@ public class Orders implements CartItemObserver {
 
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems = cartItems;
-    }
-
-    @Override
-    public void update(CartItem cartItem) {
-        calculateTotalPrice();
     }
 }
 

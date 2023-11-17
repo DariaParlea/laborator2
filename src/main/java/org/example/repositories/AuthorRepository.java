@@ -12,6 +12,9 @@ public class AuthorRepository {
     public AuthorRepository(List<Author> authors) {
         this.authors = authors;
     }
+    public AuthorRepository() {
+
+    }
 
     public Author findById(int authorId){
         for (Author author : authors) {

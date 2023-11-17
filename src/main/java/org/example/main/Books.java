@@ -3,6 +3,11 @@ package org.example.main;
 
 import org.example.main.Patterns.Decorator.BooksDecorator;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
 public class Books implements BooksDecorator {
     private int book_id;
     private String title;
@@ -52,8 +57,33 @@ public class Books implements BooksDecorator {
         this.author = author;
     }
 
+    public static String getCurrentDayOfWeek() {
+        LocalDate currentDate = LocalDate.now();
+
+        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+
+        Locale locale = Locale.getDefault();
+        String dayOfWeekString = dayOfWeek.getDisplayName(TextStyle.FULL, locale);
+
+        return dayOfWeekString;
+    }
+    public void getDiscountedPrice() {
+        String dayOfWeek = getCurrentDayOfWeek();
+        if (dayOfWeek.equals("Friday")) {
+            int discountedprice =  (int) (price * 0.9);
+            setPrice(discountedprice);
+        } else {
+            setPrice(price);
+        }
+    }
+
     @Override
     public int getPrice() {
+        String dayOfWeek = getCurrentDayOfWeek();
+        if (dayOfWeek.equals("Friday")) {
+            int discountedprice = (int) (price * 0.9);
+            return discountedprice;
+        }
         return price;
     }
 

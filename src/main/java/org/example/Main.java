@@ -1,5 +1,6 @@
 package org.example;
 import org.example.main.*;
+import org.example.main.Patterns.Factory.PersonFactory;
 import org.example.repositories.*;
 import org.example.controllers.*;
 
@@ -88,6 +89,7 @@ public class Main {
     }
     public static void main(String[] args) {
 
+        PersonFactory personFactory = new PersonFactory();
         AuthorRepository authorRepository = new AuthorRepository(AuthorRepo());
         BooksRepository booksRepository = new BooksRepository(BookRepo());
         CartItemRepository cartItemRepository = new CartItemRepository(CartItemRepo());
@@ -99,11 +101,12 @@ public class Main {
         ReviewRepository reviewRepository = new ReviewRepository(ReviewRepo());
         ShippingRepository shippingRepository = new ShippingRepository(ShippingRepo());
 
-        AuthorController authorController = new AuthorController(authorRepository);
+        PersonController personController = new PersonController(personFactory,authorRepository,clientsRepository);
+        AuthorController authorController = new AuthorController(authorRepository,personController);
         BookController bookController = new BookController(booksRepository);
         CartController cartController = new CartController(cartItemRepository);
         CategoryController categoryController = new CategoryController(categoryRepository);
-        ClientController clientController = new ClientController(clientsRepository);
+        ClientController clientController = new ClientController(clientsRepository,personController);
         OrdersController ordersController = new OrdersController(ordersRepository);
         PaymentMethodController paymentMethodController = new PaymentMethodController(paymentMethodRepository);
         PublisherController publisherController = new PublisherController(publisherRepository);
@@ -111,9 +114,9 @@ public class Main {
         ShippingController shippingController = new ShippingController(shippingRepository);
 
         ClientUI clientUI = new ClientUI(bookController,ordersController,clientController,reviewController,paymentMethodController, categoryController,authorController, shippingController);
-        //clientUI.start();
+        clientUI.start();
 
         ManagerUI managerUI = new ManagerUI(authorController,bookController,categoryController,ordersController,publisherController,shippingController,clientController,reviewController,paymentMethodController);
-        managerUI.start();
+        //managerUI.start();
     }
 }

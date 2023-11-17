@@ -6,6 +6,7 @@
 //import org.junit.jupiter.api.Test;
 //import static org.junit.jupiter.api.Assertions.*;
 //
+//import java.util.ArrayList;
 //import java.util.List;
 //
 //public class PaymentMethodRepositoryTest {
@@ -13,7 +14,7 @@
 //    @Test
 //    void findByIdTest_expected() {
 //        PaymentMethod paymentMethod = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(paymentMethod);
 //        PaymentMethod foundPaymentMethod = paymentMethodRepository.findById(1);
 //        assertEquals(paymentMethod, foundPaymentMethod, "Failed to find payment method by Id");
@@ -22,7 +23,7 @@
 //    @Test
 //    void findByIdTest_unexpected() {
 //        PaymentMethod paymentMethod = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(paymentMethod);
 //        PaymentMethod foundPaymentMethod = paymentMethodRepository.findById(2);
 //        assertNull(foundPaymentMethod, "Found unexpected payment method by Id");
@@ -32,7 +33,7 @@
 //    void findAllTest_expected() {
 //        PaymentMethod paymentMethod1 = new PaymentMethod(1, "Credit Card", "Active");
 //        PaymentMethod paymentMethod2 = new PaymentMethod(2, "PayPal", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(paymentMethod1);
 //        paymentMethodRepository.save(paymentMethod2);
 //        List<PaymentMethod> foundPaymentMethods = paymentMethodRepository.findAll();
@@ -43,7 +44,7 @@
 //
 //    @Test
 //    void findAllTest_unexpected() {
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        List<PaymentMethod> foundPaymentMethods = paymentMethodRepository.findAll();
 //        PaymentMethodRepository expected_output=null;
 //
@@ -55,7 +56,7 @@
 //    @Test
 //    void saveTest_expected() {
 //        PaymentMethod paymentMethod = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(paymentMethod);
 //        List<PaymentMethod> foundPaymentMethods = paymentMethodRepository.findAll();
 //        assertEquals(1, foundPaymentMethods.size(), "Failed to save payment method");
@@ -65,7 +66,7 @@
 //    @Test
 //    void saveTest_unexpected() {
 //        PaymentMethod paymentMethod = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(paymentMethod);
 //
 //        boolean saved = paymentMethodRepository.save(paymentMethod);
@@ -75,7 +76,7 @@
 //    @Test
 //    void updateTest_expected() {
 //        PaymentMethod initialPaymentMethod = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(initialPaymentMethod);
 //
 //        PaymentMethod updatedPaymentMethod = new PaymentMethod(1, "Debit Card", "Inactive");
@@ -91,7 +92,7 @@
 //    @Test
 //    void updateTest_unexpected() {
 //        PaymentMethod initialPaymentMethod = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(initialPaymentMethod);
 //
 //        PaymentMethod updatedPaymentMethod = new PaymentMethod(2, "Debit Card", "Inactive");
@@ -102,7 +103,7 @@
 //    @Test
 //    void deleteTest_expected() {
 //        PaymentMethod paymentMethodToDelete = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(paymentMethodToDelete);
 //
 //        paymentMethodRepository.delete(1);
@@ -114,7 +115,7 @@
 //    @Test
 //    void deleteTest_unexpected() {
 //        PaymentMethod paymentMethodToDelete = new PaymentMethod(1, "Credit Card", "Active");
-//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository();
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(new ArrayList<>());
 //        paymentMethodRepository.save(paymentMethodToDelete);
 //
 //        boolean result = paymentMethodRepository.delete(2);

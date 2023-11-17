@@ -115,7 +115,7 @@ public class ManagerUI {
                 System.out.println("Give address: ");
                 String address = scanner.nextLine();
                 scanner.nextLine();
-                authorController.creatAauthor(id, fname, lname, bdate, address);
+                authorController.createAauthor(id, fname, lname, bdate, address);
                 break;
             case 2:
                 System.out.println("Give ID: ");

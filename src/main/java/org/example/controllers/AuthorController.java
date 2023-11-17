@@ -7,14 +7,15 @@ import java.util.List;
 
 public class AuthorController {
     private AuthorRepository authorRepository;
+    private PersonController personController;
 
-    public AuthorController(AuthorRepository authorRepository) {
+    public AuthorController(AuthorRepository authorRepository, PersonController personController) {
         this.authorRepository = authorRepository;
+        this.personController = personController;
     }
 
-    public void creatAauthor(int authorId, String firstName, String lastName, String birthDate,String address) {
-        Author author = new Author(authorId, firstName, lastName, birthDate, address);
-        authorRepository.save(author);
+    public void createAauthor(int authorId, String firstName, String lastName, String birthDate,String address) {
+        personController.createPerson(authorId, firstName, lastName, birthDate, address,null);
     }
 
 
