@@ -1,5 +1,5 @@
 package org.example;
-import org.example.controllers.*;
+import org.example.BD_Controller.*;
 import org.example.main.*;
 import org.example.main.Patterns.Strategy.BankTransferPaymentStrategy;
 import org.example.main.Patterns.Strategy.CardPaymentStrategy;
@@ -12,23 +12,23 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
 
-public class ClientUI {
+public class ClientUIBD {
     private final Scanner scanner = new Scanner(System.in);
 
     private Clients currentClient;
     private int orderid = 0;
     private int reviewID = 0;
-    private final BookController bookController;
-    private final OrdersController ordersController;
-    private final ClientController clientController;
-    private final ReviewController reviewController;
-    private final PaymentMethodController paymentMethodController;
-    private final CategoryController categoryController;
-    private final AuthorController authorController;
-    private final ShippingController shippingController;
+    private final BooksControllerBD bookController;
+    private final OrdersControllerBD ordersController;
+    private final ClientsControllerBD clientController;
+    private final ReviewControllerBD reviewController;
+    private final PaymentMethodControllerBD paymentMethodController;
+    private final CategoryControllerBD categoryController;
+    private final AuthorControllerBD authorController;
+    private final ShippingControllerBD shippingController;
 
 
-    public ClientUI(BookController bookController, OrdersController ordersController, ClientController clientController, ReviewController reviewController, PaymentMethodController paymentMethodController, CategoryController categoryController, AuthorController authorController, ShippingController shippingController) {
+    public ClientUIBD(BooksControllerBD bookController, OrdersControllerBD ordersController, ClientsControllerBD clientController, ReviewControllerBD reviewController, PaymentMethodControllerBD paymentMethodController, CategoryControllerBD categoryController, AuthorControllerBD authorController, ShippingControllerBD shippingController) {
         this.bookController = bookController;
         this.ordersController = ordersController;
         this.clientController = clientController;
@@ -38,7 +38,6 @@ public class ClientUI {
         this.authorController = authorController;
         this.shippingController = shippingController;
     }
-
 
     public void start(){
         while(true){
@@ -136,12 +135,13 @@ public class ClientUI {
         String feedback = scanner.nextLine();
         scanner.nextLine();
         String date = getCurrentDateAsString();
-        reviewController.createReview(reviewID, stars, feedback, bookid, date);
+        Review review = new Review(reviewID, stars, feedback, bookid, date);
+        reviewController.saveIntoDB(review);
     }
 
     public void viewCategories(){
         System.out.println("List of available categories:");
-        List<Category> availablecategories = categoryController.viewAllCategory();
+        List<Category> availablecategories = categoryController.loadFromDB();
         int index = 1;
         if(availablecategories == null || availablecategories.isEmpty()){
             System.out.println("No categories available.");
@@ -155,7 +155,7 @@ public class ClientUI {
 
     public void viewAuthors(){
         System.out.println("List of available Authors:");
-        List<Author> availableauthors = authorController.viewAllAuthors();
+        List<Author> availableauthors = authorController.loadFromDB();
         int index = 1;
         if(availableauthors == null || availableauthors.isEmpty()){
             System.out.println("No authors available");
@@ -168,7 +168,7 @@ public class ClientUI {
     }
     public void viewBooks(){
         System.out.println("List of available books:");
-        List<Books> availableBooks = bookController.viewAllBooks();
+        List<Books> availableBooks = bookController.loadFromDB();
         if(availableBooks == null ||availableBooks.isEmpty()){
             System.out.println("No books available.");
         } else {
@@ -188,7 +188,7 @@ public class ClientUI {
             System.out.println("Enter the book ID to add to the cart: ");
             int bookid = scanner.nextInt();
             scanner.nextLine();
-            Books selectedbook = bookController.findBookById(bookid);
+            Books selectedbook = bookController.findById(bookid);
 
             if (selectedbook != null) {
                 selectedbook.getDiscountedPrice();
@@ -212,8 +212,8 @@ public class ClientUI {
             System.out.println("Enter the book id you want to delete: ");
             int id = scanner.nextInt();
             scanner.nextLine();
-            Books bookToDelete = bookController.findBookById(id);
-            Orders order = ordersController.findOrderById(orderid);
+            Books bookToDelete = bookController.findById(id);
+            Orders order = ordersController.findById(orderid);
 
             if (bookToDelete != null) {
                 List<CartItem> cartItems = order.getCartItems();
@@ -238,7 +238,7 @@ public class ClientUI {
 
     public void finalizeOrder(){
         if(currentClient != null){
-            Orders order = ordersController.findOrderById(orderid);
+            Orders order = ordersController.findById(orderid);
             order.setStatus("processing");
 
             System.out.println("How would you like to pay?(cahs/card/bank transfer): ");
@@ -257,11 +257,14 @@ public class ClientUI {
             }
 
             if(pay_method.equalsIgnoreCase("cash")){
-                paymentMethodController.createPaymentMethod(1,"at delevery",type);
+                PaymentMethod paymentMethod1 = new PaymentMethod(1,"at delevery",type);
+                paymentMethodController.saveIntoDB(paymentMethod1);
             } else if (pay_method.equalsIgnoreCase("card")) {
-                paymentMethodController.createPaymentMethod(2,"paid",type);
+                PaymentMethod paymentMethod2 = new PaymentMethod(2,"paid",type);
+                paymentMethodController.saveIntoDB(paymentMethod2);
             } else{
-                paymentMethodController.createPaymentMethod(3,"waiting",type);
+                PaymentMethod paymentMethod3 = new PaymentMethod(3,"waiting",type);
+                paymentMethodController.saveIntoDB(paymentMethod3);
             }
 
             System.out.println("What shipping method would you like?(postal office, courier): ");
@@ -271,12 +274,15 @@ public class ClientUI {
             String shipping_address = scanner.nextLine();
             scanner.nextLine();
             if(shipping_method.equalsIgnoreCase("postal office")){
-                shippingController.createShipping(orderid, shipping_address,"postal office");
+                Shipping shipping1 = new Shipping(orderid, shipping_address,"postal office");
+                shippingController.saveIntoDB(shipping1);
             } else {
-                shippingController.createShipping(orderid, shipping_address, "courier");
+                Shipping shipping2 = new Shipping(orderid, shipping_address, "courier");
+                shippingController.saveIntoDB(shipping2);
             }
 
-            ordersController.createOrder(orderid,getCurrentDateAsString(),currentClient.getClient_id(),order.calculateTotalPrice(),"processing",order.getCartItems());
+            Orders order1 = new Orders(orderid,getCurrentDateAsString(),currentClient.getClient_id(),order.calculateTotalPrice(),"processing",order.getCartItems());
+            ordersController.saveIntoDB(order1);
             System.out.println("Order finalized. Thank you for your purchase!");
         } else {
             System.out.println("Please log in before finalizing the order.");
@@ -285,7 +291,7 @@ public class ClientUI {
 
     public void viewCart(){
         if(currentClient != null){
-            Orders order = ordersController.findOrderById(orderid);
+            Orders order = ordersController.findById(orderid);
             List<CartItem> cartItems = order.getCartItems();
             if(cartItems.isEmpty()){
                 System.out.println("Your shopping cart is empty.");
@@ -306,7 +312,7 @@ public class ClientUI {
         int user_id = scanner.nextInt();
         scanner.nextLine();
 
-        if (clientController.findClientById(user_id) != null) {
+        if (clientController.findById(user_id) != null) {
             System.out.println("Client ID is already in use. Please choose a different one.");
             return;
         }
@@ -325,32 +331,22 @@ public class ClientUI {
         System.out.println("Enter your address: ");
         String address = scanner.nextLine();
 
-        clientController.createClient(user_id,fname,lname,birthdate,address,email);
+        Clients clients = new Clients(user_id,fname,lname,birthdate,address,email);
+        clientController.saveIntoDB(clients);
 
         System.out.println("Registration successful. You can now log in.");
-        //System.out.println("Number of clients in the repository: " + clientsRepository.findAll().size());
+
     }
 
     public static String getCurrentDateAsString() {
-        // Get the current date
+
         LocalDate currentDate = LocalDate.now();
 
-        // Define the desired date format
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         return currentDate.format(formatter);
     }
 
-    public static String getCurrentDayOfWeek() {
-        LocalDate currentDate = LocalDate.now();
-
-        DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
-
-        Locale locale = Locale.getDefault();
-        String dayOfWeekString = dayOfWeek.getDisplayName(TextStyle.FULL, locale);
-
-        return dayOfWeekString;
-    }
 
 
     public void login() {
@@ -361,13 +357,14 @@ public class ClientUI {
         System.out.print("Enter your email: ");
         String email = scanner.nextLine();
 
-        Clients client = clientController.findClientById(clientId);
+        Clients client = clientController.findById(clientId);
 
         if (client != null && client.getEmail().equals(email)) {
             orderid +=1;
             String date = getCurrentDateAsString();
             List<CartItem> empty = new ArrayList<>();
-            ordersController.createOrder(orderid, date,0,clientId,"initialized",empty);
+            Orders order2 = new Orders(orderid, date,0,clientId,"initialized",empty);
+            ordersController.saveIntoDB(order2);
 
             currentClient = client;
             System.out.println("Login successful. Welcome, Client ID " + currentClient.getClient_id() + "!");
@@ -384,19 +381,8 @@ public class ClientUI {
         System.out.print("Enter your email: ");
         String email = scanner.nextLine();
 
-        System.out.println("Enter your first name: ");
-        String fname = scanner.nextLine();
 
-        System.out.println("Enter your last name: ");
-        String lname = scanner.nextLine();
-
-        System.out.println("Enter your birth date: ");
-        String birthdate = scanner.nextLine();
-
-        System.out.println("Enter your address: ");
-        String address = scanner.nextLine();
-
-        clientController.updateClient(user_id, email, fname, lname, birthdate, address);
+        clientController.updateEmail(user_id, email);
     }
 
 }

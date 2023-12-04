@@ -2,6 +2,7 @@ package tests;
 
 import org.example.main.Review;
 import org.example.repositories.ReviewRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,9 +12,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ReviewRepositoryTest {
 
+    @BeforeEach
+    void setUp() {
+        ReviewRepository.getInstance(new ArrayList<>()).reset();
+    }
+
     @Test
     void findByIdTest_expected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository = ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         reviewRepository.save(review);
         Review foundReview = reviewRepository.findById(1);
@@ -24,7 +30,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void findByIdTest_unexpected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository = ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         reviewRepository.save(review);
         Review foundReview = reviewRepository.findById(2);
@@ -34,7 +40,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void findAllTest_expected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository = ReviewRepository.getInstance(new ArrayList<>());
         Review review1 = new Review(1, 5, "Great book!", 123, "2023-10-29");
         Review review2 = new Review(2, 4, "Good read!", 234, "2023-10-30");
         reviewRepository.save(review1);
@@ -48,7 +54,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void findAllTest_unexpected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository =  ReviewRepository.getInstance(new ArrayList<>());
         List<Review> foundReviews = reviewRepository.findAll();
 
         assertNull(foundReviews, "Found reviews in an empty repository");
@@ -56,7 +62,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void saveTest_expected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository =  ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         boolean saved = reviewRepository.save(review);
 
@@ -68,7 +74,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void saveTest_unexpected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository = ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         reviewRepository.save(review);
         boolean savedAgain = reviewRepository.save(review);
@@ -80,7 +86,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void updateTest_expected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository =  ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         reviewRepository.save(review);
         Review updatedReview = new Review(1, 4, "Good book!", 123, "2023-10-30");
@@ -93,7 +99,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void updateTest_unexpected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository =  ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         reviewRepository.save(review);
         Review updatedReview = new Review(2, 4, "Good book!", 123, "2023-10-30");
@@ -104,7 +110,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void deleteTest_expected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository =  ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         reviewRepository.save(review);
         boolean deleted = reviewRepository.delete(1);
@@ -116,7 +122,7 @@ public class ReviewRepositoryTest {
 
     @Test
     void deleteTest_unexpected() {
-        ReviewRepository reviewRepository = new ReviewRepository(new ArrayList<>());
+        ReviewRepository reviewRepository =  ReviewRepository.getInstance(new ArrayList<>());
         Review review = new Review(1, 5, "Great book!", 123, "2023-10-29");
         reviewRepository.save(review);
         boolean deleted = reviewRepository.delete(2);
@@ -125,4 +131,5 @@ public class ReviewRepositoryTest {
         Review foundReview = reviewRepository.findById(1);
         assertNotNull(foundReview, "Deleted the wrong review");
     }
+
 }

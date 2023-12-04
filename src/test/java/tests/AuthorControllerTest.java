@@ -1,5 +1,8 @@
 package tests;
+import org.example.controllers.PersonController;
 import org.example.main.*;
+import org.example.main.Patterns.Factory.PersonFactory;
+import org.example.repositories.ClientsRepository;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.example.controllers.AuthorController;
@@ -9,11 +12,16 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 public class AuthorControllerTest {
     private AuthorController authorController;
+    private PersonController personController;
+    //private PersonFactory personFactory;
 
     @BeforeEach
     public void setUp() {
         AuthorRepository mockRepository = new MockAuthorRepository();
-        authorController = new AuthorController(mockRepository);
+        ClientsRepository mockClientRepo = new MockClientsRepository();
+        PersonFactory personFactory = new PersonFactory();
+        personController = new PersonController(personFactory,mockRepository,mockClientRepo);
+        authorController = new AuthorController(mockRepository,personController);
     }
 
     @Test
@@ -118,6 +126,51 @@ public class AuthorControllerTest {
         }
     }
 
+    private static class MockClientsRepository extends ClientsRepository{
+        private final List<Clients> clients = new ArrayList<>();
+        public MockClientsRepository(){}
+
+        @Override
+        public Clients findById(int clientId){
+            for (Clients client : clients) {
+                if (client.getClient_id() == clientId) {
+                    return client;
+                }
+            }
+            return null;
+        }
+
+        @Override
+        public List<Clients> findAll() {
+            return new ArrayList<>(clients);
+        }
+
+        @Override
+        public boolean save(Clients client){ return clients.add(client);}
+
+        @Override
+        public boolean update(Clients updatedclient) {
+            boolean updated = false;
+            for (Clients client : clients) {
+                if (client.getClient_id() == updatedclient.getClient_id()) {
+                    client.setFirstName(updatedclient.getFirstName());
+                    client.setLastName(updatedclient.getLastName());
+                    client.setBirth_date(updatedclient.getBirth_date());
+                    client.setAddress(updatedclient.getAddress());
+                    client.setEmail(updatedclient.getEmail());
+                    updated = true;
+                    break;
+                }
+            }
+            return updated;
+        }
+
+        @Override
+        public boolean delete(int clientId) {
+            return clients.removeIf(client -> client.getClient_id() == clientId);
+        }
+
+    }
     private static class MockAuthorRepository extends AuthorRepository {
         private final List<Author> authors = new ArrayList<>();
 
@@ -137,6 +190,7 @@ public class AuthorControllerTest {
             }
             return null;
         }
+
 
         @Override
         public Author findbyName(String firstName, String lastName) {

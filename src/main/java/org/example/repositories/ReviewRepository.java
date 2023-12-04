@@ -1,16 +1,30 @@
 package org.example.repositories;
 
+import org.example.main.Orders;
+import org.example.main.Patterns.Singelton.ReviewRepositorySingelton;
 import org.example.main.Review;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewRepository {
-
+public class ReviewRepository implements ReviewRepositorySingelton{
+    private static ReviewRepository instance;
     private List<Review> reviews = new ArrayList<>();
 
-    public ReviewRepository(List<Review> reviews) {
+    private ReviewRepository(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+
+    public static ReviewRepository getInstance(List<Review> reviews) {
+        if (instance == null) {
+            instance = new ReviewRepository(reviews);
+        }
+        return instance;
+    }
+    @Override
+    public void reset() {
+        reviews.clear();
     }
 
     public Review findById(int targetReviewId) {
@@ -90,4 +104,5 @@ public class ReviewRepository {
         return deleted;
 
     }
+
 }

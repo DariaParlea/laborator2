@@ -13,6 +13,8 @@ public class ClientsRepository {
         this.clients = clients;
     }
 
+    public ClientsRepository(){}
+
     public Clients findById(int targetClientId) {
         for (Clients client : clients) {
             if (client.getClient_id() == targetClientId) {

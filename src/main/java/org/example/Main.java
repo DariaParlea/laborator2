@@ -4,6 +4,7 @@ import org.example.main.Patterns.Factory.PersonFactory;
 import org.example.repositories.*;
 import org.example.controllers.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,34 +90,35 @@ public class Main {
     }
     public static void main(String[] args) {
 
-        PersonFactory personFactory = new PersonFactory();
-        AuthorRepository authorRepository = new AuthorRepository(AuthorRepo());
-        BooksRepository booksRepository = new BooksRepository(BookRepo());
-        CartItemRepository cartItemRepository = new CartItemRepository(CartItemRepo());
-        CategoryRepository categoryRepository = new CategoryRepository(CategoryRepo());
-        ClientsRepository clientsRepository = new ClientsRepository(ClientsRepo());
-        OrdersRepository ordersRepository = new OrdersRepository(OrdersRepo());
-        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(PaymentRepo());
-        PublisherRepository publisherRepository = new PublisherRepository(PublisherRepo());
-        ReviewRepository reviewRepository = new ReviewRepository(ReviewRepo());
-        ShippingRepository shippingRepository = new ShippingRepository(ShippingRepo());
+//        PersonFactory personFactory = new PersonFactory();
+//        AuthorRepository authorRepository = new AuthorRepository(AuthorRepo());
+//        BooksRepository booksRepository = new BooksRepository(BookRepo());
+//        CartItemRepository cartItemRepository = new CartItemRepository(CartItemRepo());
+//        CategoryRepository categoryRepository = new CategoryRepository(CategoryRepo());
+//        ClientsRepository clientsRepository = new ClientsRepository(ClientsRepo());
+//        OrdersRepository ordersRepository = new OrdersRepository(OrdersRepo());
+//        PaymentMethodRepository paymentMethodRepository = new PaymentMethodRepository(PaymentRepo());
+//        PublisherRepository publisherRepository = new PublisherRepository(PublisherRepo());
+//        ReviewRepository reviewRepository = ReviewRepository.getInstance(ReviewRepo());
+//        ShippingRepository shippingRepository = new ShippingRepository(ShippingRepo());
+//
+//        PersonController personController = new PersonController(personFactory,authorRepository,clientsRepository);
+//        AuthorController authorController = new AuthorController(authorRepository,personController);
+//        BookController bookController = new BookController(booksRepository);
+//        CartController cartController = new CartController(cartItemRepository);
+//        CategoryController categoryController = new CategoryController(categoryRepository);
+//        ClientController clientController = new ClientController(clientsRepository,personController);
+//        OrdersController ordersController = new OrdersController(ordersRepository);
+//        PaymentMethodController paymentMethodController = new PaymentMethodController(paymentMethodRepository);
+//        PublisherController publisherController = new PublisherController(publisherRepository);
+//        ReviewController reviewController = new ReviewController(reviewRepository);
+//        ShippingController shippingController = new ShippingController(shippingRepository);
+//
+//        ClientUI clientUI = new ClientUI(bookController,ordersController,clientController,reviewController,paymentMethodController, categoryController,authorController, shippingController);
+//        //clientUI.start();
+//
+//        ManagerUI managerUI = new ManagerUI(authorController,bookController,categoryController,ordersController,publisherController,shippingController,clientController,reviewController,paymentMethodController);
+//        managerUI.start();
 
-        PersonController personController = new PersonController(personFactory,authorRepository,clientsRepository);
-        AuthorController authorController = new AuthorController(authorRepository,personController);
-        BookController bookController = new BookController(booksRepository);
-        CartController cartController = new CartController(cartItemRepository);
-        CategoryController categoryController = new CategoryController(categoryRepository);
-        ClientController clientController = new ClientController(clientsRepository,personController);
-        OrdersController ordersController = new OrdersController(ordersRepository);
-        PaymentMethodController paymentMethodController = new PaymentMethodController(paymentMethodRepository);
-        PublisherController publisherController = new PublisherController(publisherRepository);
-        ReviewController reviewController = new ReviewController(reviewRepository);
-        ShippingController shippingController = new ShippingController(shippingRepository);
-
-        ClientUI clientUI = new ClientUI(bookController,ordersController,clientController,reviewController,paymentMethodController, categoryController,authorController, shippingController);
-        clientUI.start();
-
-        ManagerUI managerUI = new ManagerUI(authorController,bookController,categoryController,ordersController,publisherController,shippingController,clientController,reviewController,paymentMethodController);
-        //managerUI.start();
     }
 }

@@ -46,7 +46,7 @@ public class Orders  {
     }
 
     public void setTotal_price(int total_price) {
-        this.total_price = total_price;
+        this.total_price = calculateTotalPrice();
     }
 
     public int getClient_id() {

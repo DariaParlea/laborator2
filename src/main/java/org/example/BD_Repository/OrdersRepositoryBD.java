@@ -1,0 +1,188 @@
+package org.example.BD_Repository;
+import org.example.main.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.example.SqlServer;
+import org.example.main.Patterns.Observer.CartItemObservable;
+import org.example.main.Patterns.Observer.OrderObserver;
+
+public class OrdersRepositoryBD implements OrderObserver {
+    private SqlServer sqlServer;
+    private List<CartItemObservable> observables;
+
+    public OrdersRepositoryBD(SqlServer sqlServer) {
+        this.sqlServer = sqlServer;
+    }
+
+    public void saveIntoDB(Orders order){
+        try (Connection connection = sqlServer.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO labor.Orders(OrderID, Date, TotalPrice, ClientID, Status) VALUES (?,?,?,?,?)")){
+
+                preparedStatement.setInt(1,order.getOrder_id());
+                preparedStatement.setString(2, order.getDate());
+                preparedStatement.setInt(3,order.calculateTotalPrice());
+                preparedStatement.setInt(4,order.getClient_id());
+                preparedStatement.setString(5,order.getStatus());
+
+            preparedStatement.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        try (Connection connection = sqlServer.connect();
+             PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO labor.Order_CartItem(OrderID, BookID, Quantity) VALUES (?,?,?)")){
+
+                List<CartItem> cartItems = order.getCartItems();
+                for (CartItem cartItem:cartItems){
+                    preparedStatement2.setInt(1,order.getOrder_id());
+                    preparedStatement2.setInt(2,cartItem.getBook().getBook_id());
+                    preparedStatement2.setInt(3,cartItem.getQuantity());
+            }
+
+            preparedStatement2.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
+    public Orders createorderFromResultSet(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("OrderID");
+        String date = resultSet.getString("Date");
+        int totalprice = resultSet.getInt("TotalPrice");
+        int clientid = resultSet.getInt("ClientID");
+        String status = resultSet.getString("Status");
+
+        List<CartItem> cartItems = loadFromDBIntermediaryTable(id);
+        Orders order = new Orders(id,date,totalprice,clientid,status,cartItems);
+        return order;
+    }
+
+    public CartItem createOrder_CartItemFromResultSet(ResultSet resultSet) throws SQLException {
+        BooksRepositoryDB booksRepositoryDB = new BooksRepositoryDB(sqlServer);
+        int orderid = resultSet.getInt("OrderID");
+        int bookid = resultSet.getInt("BookID");
+        int quantity = resultSet.getInt("Quantity");
+
+        Books book = booksRepositoryDB.findByID(bookid);
+        CartItem cartItem = new CartItem(book,quantity);
+        return cartItem;
+    }
+
+    public List<CartItem> loadFromDBIntermediaryTable(int id) {
+        List<CartItem> result = new ArrayList<>();
+        try (Connection connection = sqlServer.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM labor.Order_CartItem WHERE OrderID = ?");
+        ) {
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    result.add(createOrder_CartItemFromResultSet(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public List<Orders> loadFromDB(){
+        List<Orders> result = new ArrayList<>();
+        try (Connection connection = sqlServer.connect();
+             Statement statement = connection.createStatement()) {
+
+            String sql = "SELECT * FROM labor.Orders";
+            try (ResultSet resultSet = statement.executeQuery(sql)) {
+                while (resultSet.next()) {
+                    result.add(createorderFromResultSet(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    public Orders findByID(int id){
+        List<Orders> allOrders = loadFromDB();
+        Orders found = null;
+        for(Orders order:allOrders){
+            if(order.getOrder_id() == id)
+                found = order;
+        }
+
+        return found;
+    }
+
+
+    public void delete(int id){
+        try (Connection connection = sqlServer.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM labor.Orders WHERE OrderID = ?")) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try (Connection connection = sqlServer.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM labor.Order_CartItem WHERE OrderID = ?")) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateStatus(int Id, String newstatus) {
+        try (Connection connection = sqlServer.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE labor.Orders SET Status = ? WHERE OrderID = ?")) {
+
+            preparedStatement.setString(1,newstatus);
+            preparedStatement.setInt(2, Id);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void update(Orders order) {
+        try (Connection connection = sqlServer.connect();
+             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE labor.Orders SET Date = ?, TotalPrice = ?, ClientID = ?,Status = ? WHERE OrderID = ?")) {
+
+            preparedStatement.setString(1,order.getDate());
+            preparedStatement.setInt(2, order.calculateTotalPrice());
+            preparedStatement.setInt(3,order.getClient_id());
+            preparedStatement.setString(4,order.getStatus());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update_event(String event, CartItem cartItem) {
+        List<Orders> orders = loadFromDB();
+        for(Orders order : orders){
+            List<CartItem> cartItems = order.getCartItems();
+            for(CartItem cartItem1 : cartItems){
+                if(cartItem.equals(cartItem1)){
+                    System.out.println(event);
+                }
+            }
+        }
+    }
+
+}
