@@ -15,19 +15,19 @@ public class CartItemRepositoryBD implements CartItemObservable {
         this.sqlServer = sqlServer;
     }
 
-    public void saveIntoDB(List<CartItem> cartItems){
+    public void saveIntoDB(CartItem cartItem){
         try (Connection connection = sqlServer.connect();
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO labor.CartItem(BookID, Quantity) VALUES (?,?)")){
 
-            for(CartItem cartItem : cartItems){
                 preparedStatement.setInt(1,cartItem.getBook().getBook_id());
                 preparedStatement.setInt(2,cartItem.getQuantity());
-            }
+
 
             preparedStatement.executeUpdate();
         }catch (SQLException e){
             e.printStackTrace();
         }
+
     }
 
     public CartItem createCartItemFromResultSet(ResultSet resultSet) throws SQLException{

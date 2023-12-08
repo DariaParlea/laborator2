@@ -16,8 +16,8 @@ public class ShippingRepositoryBD {
              PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO labor.Shipping(ShippingID, Address, ShippingMethod) VALUES (?,?,?)")){
 
                 preparedStatement.setInt(1,shipping.getShipping_id());
-                preparedStatement.setString(3,shipping.getAddress());
-                preparedStatement.setString(5,shipping.getShipping_method());
+                preparedStatement.setString(2,shipping.getAddress());
+                preparedStatement.setString(3,shipping.getShipping_method());
 
             preparedStatement.executeUpdate();
         }catch (SQLException e){

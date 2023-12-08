@@ -53,7 +53,7 @@ public class PaymentMethodRepositoryBD {
         try (Connection connection = sqlServer.connect();
              Statement statement = connection.createStatement()) {
 
-            String sql = "SELECT * FROM labor.PaymentMethod";
+            String sql = "SELECT * FROM labor.Paymentmethod";
             try (ResultSet resultSet = statement.executeQuery(sql)) {
                 while (resultSet.next()) {
                     result.add(createPaymentMethodFromResultSet(resultSet));
@@ -92,7 +92,7 @@ public class PaymentMethodRepositoryBD {
 
     public void delete(int id){
         try (Connection connection = sqlServer.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM labor.PaymentMethod WHERE PaymentID = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM labor.Paymentmethod WHERE PaymentID = ?")) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

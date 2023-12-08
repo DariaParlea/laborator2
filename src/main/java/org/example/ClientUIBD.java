@@ -6,18 +6,16 @@ import org.example.main.Patterns.Strategy.CardPaymentStrategy;
 import org.example.main.Patterns.Strategy.CashPaymentStrategy;
 import org.example.main.Patterns.Strategy.PaymentStrategy;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.util.*;
 
 public class ClientUIBD {
     private final Scanner scanner = new Scanner(System.in);
 
     private Clients currentClient;
-    private int orderid = 0;
-    private int reviewID = 0;
+    private static int orderid = 0;
+    private static int reviewID = 1;
     private final BooksControllerBD bookController;
     private final OrdersControllerBD ordersController;
     private final ClientsControllerBD clientController;
@@ -26,9 +24,10 @@ public class ClientUIBD {
     private final CategoryControllerBD categoryController;
     private final AuthorControllerBD authorController;
     private final ShippingControllerBD shippingController;
+    private final CartItemControllerBD cartItemController;
 
 
-    public ClientUIBD(BooksControllerBD bookController, OrdersControllerBD ordersController, ClientsControllerBD clientController, ReviewControllerBD reviewController, PaymentMethodControllerBD paymentMethodController, CategoryControllerBD categoryController, AuthorControllerBD authorController, ShippingControllerBD shippingController) {
+    public ClientUIBD(BooksControllerBD bookController, OrdersControllerBD ordersController, ClientsControllerBD clientController, ReviewControllerBD reviewController, PaymentMethodControllerBD paymentMethodController, CategoryControllerBD categoryController, AuthorControllerBD authorController, ShippingControllerBD shippingController,CartItemControllerBD cartItemController) {
         this.bookController = bookController;
         this.ordersController = ordersController;
         this.clientController = clientController;
@@ -37,6 +36,7 @@ public class ClientUIBD {
         this.categoryController = categoryController;
         this.authorController = authorController;
         this.shippingController = shippingController;
+        this.cartItemController = cartItemController;
     }
 
     public void start(){
@@ -196,6 +196,7 @@ public class ClientUIBD {
                 System.out.println("Enter the quantity: ");
                 int quantity = scanner.nextInt();
                 CartItem cartItem = new CartItem(selectedbook, quantity);
+                cartItemController.saveIntoDB(cartItem);
                 ordersController.addItemToOrder(orderid, cartItem);
                 System.out.println("Book added to cart.");
             } else {
@@ -206,6 +207,34 @@ public class ClientUIBD {
         }
     }
 
+
+//    public void deleteBookFromCart() {
+//        if (currentClient != null) {
+//            System.out.println("Enter the book id you want to delete: ");
+//            int id = scanner.nextInt();
+//            scanner.nextLine();
+//            Books bookToDelete = bookController.findById(id);
+//            Orders order = ordersController.findById(orderid);
+//
+//            if (bookToDelete != null) {
+//                List<CartItem> cartItems = order.getCartItems();
+//                Iterator<CartItem> iterator = cartItems.iterator();
+//
+//                while (iterator.hasNext()) {
+//                    CartItem cartItem = iterator.next();
+//                    if (bookToDelete == cartItem.getBook()) {
+//                        if (cartItem.getQuantity() == 1) {
+//                            iterator.remove(); // Use iterator's remove method
+//                            ordersController.removeItemFromOrder(orderid, cartItem);
+//                        } else {
+//                            int quantity = cartItem.getQuantity();
+//                            cartItem.setQuantity(quantity - 1);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     public void deleteBookFromCart() {
         if (currentClient != null) {
@@ -219,21 +248,33 @@ public class ClientUIBD {
                 List<CartItem> cartItems = order.getCartItems();
                 Iterator<CartItem> iterator = cartItems.iterator();
 
+                System.out.println("Book ID to delete: " + id);
+
                 while (iterator.hasNext()) {
                     CartItem cartItem = iterator.next();
-                    if (bookToDelete == cartItem.getBook()) {
+                    System.out.println("Checking cart item: " + cartItem);
+
+                    if (bookToDelete.getBook_id() == cartItem.getBook().getBook_id()) {
                         if (cartItem.getQuantity() == 1) {
                             iterator.remove(); // Use iterator's remove method
+                            System.out.println("Removing item from order: " + cartItem);
                             ordersController.removeItemFromOrder(orderid, cartItem);
+                            cartItemController.delete(cartItem.getBook().getBook_id());
                         } else {
                             int quantity = cartItem.getQuantity();
                             cartItem.setQuantity(quantity - 1);
                         }
+                        //ordersController.update_delete(order,bookToDelete.getBook_id());
                     }
                 }
+
+                System.out.println("Cart items after deletion: " + cartItems);
             }
         }
     }
+
+
+
 
 
     public void finalizeOrder(){
@@ -282,7 +323,7 @@ public class ClientUIBD {
             }
 
             Orders order1 = new Orders(orderid,getCurrentDateAsString(),currentClient.getClient_id(),order.calculateTotalPrice(),"processing",order.getCartItems());
-            ordersController.saveIntoDB(order1);
+            ordersController.update(order1);
             System.out.println("Order finalized. Thank you for your purchase!");
         } else {
             System.out.println("Please log in before finalizing the order.");
@@ -292,6 +333,7 @@ public class ClientUIBD {
     public void viewCart(){
         if(currentClient != null){
             Orders order = ordersController.findById(orderid);
+            System.out.println(orderid);
             List<CartItem> cartItems = order.getCartItems();
             if(cartItems.isEmpty()){
                 System.out.println("Your shopping cart is empty.");

@@ -15,8 +15,8 @@ public class CartItemControllerBD {
         this.cartItemRepositoryBD = cartItemRepositoryBD;
     }
 
-    public void saveIntoDB(List<CartItem> CartItems){
-        cartItemRepositoryBD.saveIntoDB(CartItems);
+    public void saveIntoDB(CartItem cartItems){
+        cartItemRepositoryBD.saveIntoDB(cartItems);
     }
 
     public CartItem createCartItemFromResultSet(ResultSet resultSet) throws SQLException{

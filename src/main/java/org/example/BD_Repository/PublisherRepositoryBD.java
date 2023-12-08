@@ -31,7 +31,7 @@ public class PublisherRepositoryBD {
         }
 
         try (Connection connection = sqlServer.connect();
-             PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO labor.Books_Publisher(BookId, PublisherID) VALUES (?,?)")) {
+             PreparedStatement preparedStatement2 = connection.prepareStatement("INSERT INTO labor.Books_Publishers(BookId, PublisherID) VALUES (?,?)")) {
 
                 List<Books> books = publisher.getBooks();
                 for (Books book : books) {
@@ -69,7 +69,7 @@ public class PublisherRepositoryBD {
     public List<Books> loadFromDBIntermediaryTable(int id) {
         List<Books> result = new ArrayList<>();
         try (Connection connection = sqlServer.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM labor.Books_Publishers WHERE OrderID = ?");
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM labor.Books_Publishers WHERE PublisherId = ?");
         ) {
             preparedStatement.setInt(1, id);
 
@@ -89,7 +89,7 @@ public class PublisherRepositoryBD {
         try (Connection connection = sqlServer.connect();
              Statement statement = connection.createStatement()) {
 
-            String sql = "SELECT * FROM labor.Publisher";
+            String sql = "SELECT * FROM labor.Publishers";
             try (ResultSet resultSet = statement.executeQuery(sql)) {
                 while (resultSet.next()) {
                     result.add(createPublisherFromResultSet(resultSet));
@@ -115,7 +115,7 @@ public class PublisherRepositoryBD {
 
     public void delete(int id){
         try (Connection connection = sqlServer.connect();
-             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM labor.Publisher WHERE PublisherID = ?")) {
+             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM labor.Publishers WHERE PublisherID = ?")) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

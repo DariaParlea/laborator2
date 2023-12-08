@@ -10,7 +10,7 @@ import java.util.List;
 public class PaymentMethodControllerBD {
     private PaymentMethodRepositoryBD paymentMethodRepositoryBD;
 
-    public PaymentMethodControllerBD(PaymentMethodRepositoryBD PaymentMethodRepositoryBD) {
+    public PaymentMethodControllerBD(PaymentMethodRepositoryBD paymentMethodRepositoryBD) {
         this.paymentMethodRepositoryBD = paymentMethodRepositoryBD;
     }
 

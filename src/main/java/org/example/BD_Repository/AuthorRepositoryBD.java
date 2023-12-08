@@ -8,6 +8,10 @@ import org.example.SqlServer;
 public class AuthorRepositoryBD {
     private SqlServer sqlServer;
 
+    public AuthorRepositoryBD( ) {
+
+    }
+
     public AuthorRepositoryBD(SqlServer sqlServer) {
         this.sqlServer = sqlServer;
     }

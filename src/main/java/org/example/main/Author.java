@@ -13,5 +13,11 @@ public class Author extends Person{
         return super.getId();
     }
 
-
+    @Override
+    public String toString() {
+        return "Author{" +
+                ", firstName='" + getFirstName() + '\'' +
+                ", lastName='" + getLastName() + '\'' +
+                '}';
+    }
 }

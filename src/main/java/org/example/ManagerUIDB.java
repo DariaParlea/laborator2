@@ -71,10 +71,13 @@ public class ManagerUIDB {
                     break;
                 case 7:
                     paymentMethodMenu();
+                    break;
                 case 8:
                     reviewMenu();
+                    break;
                 case 9:
                     clientsMenu();
+                    break;
                 case 10:
                     System.out.println("Goodbye!");
                     return;
@@ -377,14 +380,14 @@ public class ManagerUIDB {
 
                 ordersController.updateStatus(aid,status);
                 break;
-            case 5:
+            case 4:
                 System.out.println("Give id: ");
-                int autid = scanner.nextInt();
+                int ordid = scanner.nextInt();
                 scanner.nextLine();
-                authorController.delete(autid);
+                ordersController.delete(ordid);
                 System.out.println("Order has been deleted");
                 break;
-            case 6:
+            case 5:
                 System.out.println("Goodbye!");
                 return;
             default:

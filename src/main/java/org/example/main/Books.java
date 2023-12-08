@@ -7,6 +7,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Books implements BooksDecorator {
     private int book_id;
@@ -99,5 +100,29 @@ public class Books implements BooksDecorator {
         this.category = category;
     }
 
+    @Override
+    public String toString() {
+        return "Books{" +
+                "book_id=" + book_id +
+                ", title='" + title + '\'' +
+                ", publishing_year=" + publishing_year +
+                ", author=" + author +
+                ", price=" + price +
+                ", category=" + category +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Books books = (Books) obj;
+        return book_id == books.book_id &&
+                publishing_year == books.publishing_year &&
+                price == books.price &&
+                Objects.equals(title, books.title) &&
+                Objects.equals(author, books.author) &&
+                Objects.equals(category, books.category);
+    }
 
 }

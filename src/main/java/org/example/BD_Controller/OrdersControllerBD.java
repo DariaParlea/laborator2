@@ -31,7 +31,8 @@ public class OrdersControllerBD {
     }
 
     public void updateStatus(int id, String status){ordersRepositoryBD.updateStatus(id,status);}
-
+    public void update(Orders order){ordersRepositoryBD.update(order);}
+    public void update_delete(Orders order, int bookid){ordersRepositoryBD.update_delete(order, bookid);}
 
     public void delete(int id){
         ordersRepositoryBD.delete(id);
@@ -46,11 +47,19 @@ public class OrdersControllerBD {
         }
     }
 
-    public void removeItemFromOrder(int orderId,CartItem cartItem){
-        Orders order=ordersRepositoryBD.findByID(orderId);
-        if(order!=null){
+//    public void removeItemFromOrder(int orderId,CartItem cartItem){
+//        Orders order=ordersRepositoryBD.findByID(orderId);
+//        if(order!=null){
+//            order.removeCartItem(cartItem);
+//            ordersRepositoryBD.update_delete(order);
+//        }
+//    }
+
+    public void removeItemFromOrder(int orderId, CartItem cartItem) {
+        Orders order = ordersRepositoryBD.findByID(orderId);
+        if (order != null) {
             order.removeCartItem(cartItem);
-            ordersRepositoryBD.update(order);
+            ordersRepositoryBD.update_delete(order, cartItem.getBook().getBook_id());
         }
     }
 }
